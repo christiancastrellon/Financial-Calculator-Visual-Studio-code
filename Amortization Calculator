@@ -1,0 +1,261 @@
+// ---------------------------------------------------------------
+// Programming Assignment:	COURSEPROJECTWEEK7
+// Developer:			______Christian Castrellon________________
+// Date Written:			______June 15, 2021____________
+// Purpose:				 Financial Calculator
+// ---------------------------------------------------------------
+#include<fstream>
+#include<iostream>
+#include <stdlib.h>
+#include <string>
+#include <iomanip>
+double CalculateMonthlyPayment(double loan_amount, double annual_interest_rate, double number_of_years);
+double CalculateLoanAmount(double monthly_amount, double annual_interest_rate, double number_of_years);
+double CalculateLengthofLoan(double monthly_amount, double annual_interest_rate, double loan_amount, double total_amount);
+double CalculateInterestRate(double loan_amount, double monthly_amount, double number_of_years, double total_amount);
+using namespace std;
+// function prototypes
+void WriteDatatoFile(float data);	//Write data from file
+void ReadDataFromFile(float data); //Read data from file, display 
+int IOMenu();
+int main() {
+	int IOoption;
+
+
+	cout << endl << endl;
+	cout << "Christian Castrellon's Financial Calculator. \n";
+	cout << endl << endl;
+	string user_name;
+	double loan_amount, annual_interest_rate, number_of_years, total_amount, monthly_amount;
+	int user_input;
+	cout << "Enter user name: ";
+	//cin >> user_name;
+	getline(cin, user_name);
+	while (true)
+	{
+
+
+		cout << "Please Enter One of the Options Below: " << endl;
+		cout << "1 to calculate monthly payment: " << endl;
+		cout << "2 to calculate loan amount: " << endl;
+		cout << "3 to calculate length of loan: " << endl;
+		cout << "4 to calculate interest rate: " << endl;
+		cout << "5 To Exit the Financial Calculator Program. \n " << endl;
+		cout << "Enter your option ";
+		cin >> user_input;
+		if (user_input == 1)
+		{
+			//double loan_amount, annual_interest_rate, number_of_years;
+			double input_values_option_1[3] = { 0.0 };
+			cout << "Please enter the loan amount: $ ";
+			cin >> loan_amount;
+			//cin >> input_values_option_1[0];
+			cout << endl;
+			cout << "Enter the annual interest rate: % ";
+			cin >> annual_interest_rate;
+			//cin >> input_values_option_1[1];
+			cout << endl;
+			cout << "The number of years: ";
+			cin >> number_of_years;
+			//cin >> input_values_option_1[2];
+			//total_amount = (loan_amount)+(number_of_years * loan_amount * (annual_interest_rate / 100.00));
+			//total_amount = (input_values_option_1[0]) + (input_values_option_1[2] * input_values_option_1[0] * (input_values_option_1[1] / 100.00));
+			//monthly_amount = (total_amount / (input_values_option_1[2] * 12));
+			monthly_amount = CalculateMonthlyPayment(loan_amount, annual_interest_rate, number_of_years);
+			cout << "Monthly amount to be paid: $ " << monthly_amount << endl;
+		}
+		else if (user_input == 2)
+		{
+			//double monthly_amount, annual_interest_rate, number_of_years;
+			//double input_values_option_2[3] = { 0.0 };
+			cout << "Enter monthly payment: $ ";
+			cin >> monthly_amount;
+			//cin >> input_values_option_2[0];
+			cout << endl;
+			cout << "Enter the annual interest rate: % ";
+			cin >> annual_interest_rate;
+			//cin >> input_values_option_2[1];
+			cout << endl;
+			cout << "The number of years: ";
+			cin >> number_of_years;
+			//cin >> input_values_option_2[2];
+			//loan_amount = (input_values_option_2[0] * (input_values_option_2[2] * 12));
+			loan_amount = CalculateLoanAmount(monthly_amount, annual_interest_rate, number_of_years);
+			cout << "Loan amount: $ " << loan_amount << endl;
+		}
+		else if (user_input == 3)
+		{
+			//double monthly_amount, annual_interest_rate, loan_amount, total_amount;
+			//double input_values_option_3[4] = { 0.0 };
+			cout << "Enter monthly payment: $ ";
+			cin >> monthly_amount;
+			//cin >> input_values_option_3[0];
+			cout << endl;
+			cout << "Enter the annual interest rate: % ";
+			cin >> annual_interest_rate;
+			//cin >> input_values_option_3[1];
+			cout << endl;
+			cout << "Please enter the loan amount: $ ";
+			cin >> loan_amount;
+			//cin >> input_values_option_3[2];
+			cout << endl;
+			cout << "Please enter the total loan amount: $ ";
+			cin >> total_amount;
+			//cin >> input_values_option_3[3];
+			cout << endl;
+			//number_of_years = (input_values_option_3[3] / (input_values_option_3[0]) / 12);
+			number_of_years = CalculateLengthofLoan(monthly_amount, annual_interest_rate, loan_amount, total_amount);
+			cout << "Length of loan in number of years: " << number_of_years << endl;
+
+		}
+		else if (user_input == 4)
+		{
+			//double loan_amount, monthly_amount, number_of_years, total_amount;
+			double input_values_option_4[4] = { 0.0 };
+			cout << "Please enter the loan amount: $ ";
+			cin >> loan_amount;
+			//cin >> input_values_option_4[0];
+			cout << endl;
+			cout << "Enter monthly payment: $ ";
+			cin >> monthly_amount;
+			//cin >> input_values_option_4[1];
+			cout << endl;
+			cout << "Enter number of years: ";
+			cin >> number_of_years;
+			//cin >> input_values_option_4[2];
+			cout << endl;
+			cout << "Enter total loan amount: $ ";
+			cin >> total_amount;
+			//cin >> input_values_option_4[3];
+			cout << endl;
+			//annual_interest_rate = ((input_values_option_4[3]) - (input_values_option_4[0])) / (input_values_option_4[0]) / (input_values_option_4[2]) * 100;
+			annual_interest_rate = CalculateInterestRate(loan_amount, monthly_amount, number_of_years, total_amount);
+			cout << "Annual Interest rate: % " << annual_interest_rate << endl;
+
+
+		}
+		else if (user_input == 5)
+		{
+			cout << "Exiting the Financial Calculator Program " << endl;
+			cout << endl << endl;
+			exit(10);
+		}
+
+		else
+		{
+			cout << "Invalid option" << endl;
+			cout << "Run the program again and enter either 1, 2, 3, or 4 as an option" << endl;
+			continue;
+
+		}
+		break;
+	}// end while loop
+
+
+
+	/* cin >> loan_amount;
+	cout << endl;
+	cout << "Enter the annual interest rate: % ";
+	cin >> annual_interest_rate;
+	cout << endl;
+	cout << "The number of years: ";
+	cin >> number_of_years;
+	if (loan_amount  )
+
+	cout << endl;
+
+	total_amount = ( loan_amount) + (number_of_years * loan_amount * (annual_interest_rate / 100.00));
+	monthly_amount = (total_amount / (number_of_years * 12));
+
+
+	cout << user_name << endl;
+	cout << "Total amount to be paid: $ " << total_amount << endl;
+	cout << "Total annual interest: $ " << total_amount - loan_amount << endl;
+	cout << "Monthly amount to be paid: $ " << monthly_amount << endl;
+	cout << endl << endl;
+	system("pause");
+	*/
+	IOoption = IOMenu();
+	if (IOoption == 1)
+	{
+		WriteDatatoFile(loan_amount);
+		WriteDatatoFile(annual_interest_rate);
+		WriteDatatoFile(number_of_years);
+		WriteDatatoFile(total_amount);
+		WriteDatatoFile(monthly_amount);
+
+	}
+
+	if (IOoption == 2)
+	{
+		ReadDataFromFile(loan_amount);
+		ReadDataFromFile(annual_interest_rate);
+		ReadDataFromFile(number_of_years);
+		ReadDataFromFile(total_amount);
+		ReadDataFromFile(monthly_amount);
+	}
+
+
+	return 0;
+}
+
+double CalculateMonthlyPayment(double loan_amount, double annual_interest_rate, double number_of_years)
+{
+	double total_amount, monthly_amount;
+	total_amount = (loan_amount)+(number_of_years * loan_amount * (annual_interest_rate / 100.00));
+	total_amount = (loan_amount)+(number_of_years * loan_amount) * (annual_interest_rate / 100.00);
+	monthly_amount = (total_amount / (number_of_years * 12));
+	return monthly_amount;
+} //End Calculate Monthly Payment Function
+
+double CalculateLoanAmount(double monthly_amount, double annual_interest_rate, double number_of_years)
+{
+	double loan_amount;
+	loan_amount = (monthly_amount) * (number_of_years * 12);
+	return loan_amount;
+} //End Calculate Loan Amount Function
+
+double CalculateLengthofLoan(double monthly_amount, double annual_interest_rate, double loan_amount, double total_amount)
+{
+	double number_of_years;
+	number_of_years = (total_amount / (monthly_amount) / 12);
+	return number_of_years;
+} //End Calculate Length of Loan Function
+
+double CalculateInterestRate(double loan_amount, double monthly_amount, double number_of_years, double total_amount)
+{
+	double annual_interest_rate;
+	annual_interest_rate = ((total_amount)-(loan_amount)) / (loan_amount) / (number_of_years) * 100;
+	return annual_interest_rate;
+} //End Calculate Interest Rate Function
+
+int IOMenu()
+{
+	int IOoption;
+	cout << endl;
+	cout << "1 Save data to file";
+	cout << endl;
+	cout << "2 Read data from the file";
+	cout << endl;
+	cout << "Enter an option 1,2, or 3: ";
+	cin >> IOoption;
+	return IOoption;
+
+} //End IOMenu Function
+void WriteDatatoFile(float data)	//Write data from file
+{
+	ofstream FinancialCalculator;
+	FinancialCalculator.open("Data.txt");
+	FinancialCalculator << data << " ";
+	FinancialCalculator.close();
+
+
+
+} //End WriteDatatoFile(void) Function
+void ReadDataFromFile(float data) //Read data from file, display 
+{
+	ifstream FinancialCalculator;
+	FinancialCalculator.open("FinancialCalculatorData.txt");
+	FinancialCalculator.close();
+
+} //End ReadDataFromFile(void) Function
